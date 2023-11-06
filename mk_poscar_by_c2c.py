@@ -43,14 +43,17 @@ cif_path_list = [str(path) for path in cif_path_list if cif_filter(path)]
 poscar_path_list = [str(cif_path)[0:-4] + '/POSCAR' for cif_path in cif_path_list]
 
 
+error_list = []
 before = time.time()
 
+# TEST
+# for cif_path, poscar_path in tqdm(zip(cif_path_list[0:10], poscar_path_list[0:10]), total=len(cif_path_list)):
+# PERFORM
 for cif_path, poscar_path in tqdm(zip(cif_path_list, poscar_path_list), total=len(cif_path_list)):
-    error_list = []
     try:
         subprocess.run(['cif2cell', cif_path, '-p', 'vasp', '-o', poscar_path, '--vasp-format=5'])
     except Exception as e:
-        error_list.appens(e)
+        error_list.append(e)
 
 after = time.time()
 print(f"it took {after - before}sec to run cif2cell all files.")
